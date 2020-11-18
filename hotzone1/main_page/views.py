@@ -1,6 +1,8 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
-class mainView(TemplateView):
-    template_name = "main.html"
+@login_required
+def mainView(request):
+    return render(request, 'main.html', {})

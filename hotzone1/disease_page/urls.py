@@ -2,7 +2,7 @@ from django.urls import path
 from disease_page import views
 
 urlpatterns = [
-    path('all/<int:offset>', views.diseaseAllView.as_view(), name='disease_page'),
+    path('all/<int:offset>', views.diseaseAllView, name='disease_page'),
     path('all/', views.redirectView),
     path('all/query/<int:offset>', views.diseaseSearch, name='disease_search'),
     path('add/submit/', views.getNewDisease),
@@ -13,6 +13,6 @@ urlpatterns = [
     path('details/edit/delete/', views.redirectView),
     path('details/edit/<int:pk>', views.diseaseEditView, name='disease_edit'),
     path('details/edit/', views.redirectView),
-    path('details/<int:pk>', views.diseaseDetailsView.as_view(), name='disease_details'),
+    path('details/<int:pk>', views.diseaseDetailsView, name='disease_details'),
     path('details/', views.redirectView),
 ]

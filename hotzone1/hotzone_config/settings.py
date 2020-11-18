@@ -70,6 +70,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
             os.path.join(BASE_DIR, 'templates'),
+            os.path.join(BASE_DIR, 'templates/login'),
             os.path.join(BASE_DIR, 'templates/patient'),
             os.path.join(BASE_DIR, 'templates/disease'),
             os.path.join(BASE_DIR, 'templates/location'),
@@ -111,6 +112,8 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
+LOGIN_URL = '/login/'
+#LOGIN_REDIRECT_URL = '/login/'
 
 AUTH_PASSWORD_VALIDATORS = [
     {

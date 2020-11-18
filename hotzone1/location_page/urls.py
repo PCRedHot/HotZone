@@ -2,7 +2,7 @@ from django.urls import path
 from location_page import views
 
 urlpatterns = [
-    path('all/<int:offset>', views.locationAllView.as_view(), name='location_page'),
+    path('all/<int:offset>', views.locationAllView, name='location_page'),
     path('all/', views.redirectView),
     path('all/query/<int:offset>', views.locationSearch, name='location_search'),
     path('add/submit/', views.getNewLocation),
@@ -14,6 +14,6 @@ urlpatterns = [
     path('details/edit/query/<int:pk>', views.locationEditGeoDataView, name='location_edit_query'),
     path('details/edit/<int:pk>', views.locationEditView, name='location_edit'),
     path('details/edit/', views.redirectView),
-    path('details/<int:pk>', views.locationDetailsView.as_view(), name='location_details'),
+    path('details/<int:pk>', views.locationDetailsView, name='location_details'),
     path('details/', views.redirectView),
 ]

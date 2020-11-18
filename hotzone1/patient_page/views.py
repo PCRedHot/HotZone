@@ -3,17 +3,21 @@ from django.http import HttpResponseRedirect
 from django.views.generic import TemplateView
 from hotzoneData.models import Patient
 from .forms import patientEditForm, patientAddForm
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def redirectView(request):
     res = redirect('/data/patient/all/0')
     return res
 
+@login_required
 def deletePatient(request, pk):
     patient = Patient.objects.get(pk=pk)
     patient.delete()
     return redirect('/data/patient/all/0')
 
+@login_required
 def patientSearch(request, offset):
     if 'patient_search' not in request.GET:
         return redirectView(request)
@@ -35,6 +39,7 @@ def patientSearch(request, offset):
 
     return render(request, 'patient_search.html', context)
 
+@login_required
 def getEditPatient(request, pk):
     if request.method == 'POST':
         form = patientEditForm(request.POST, pk=pk)
@@ -50,6 +55,7 @@ def getEditPatient(request, pk):
     else:
         return HttpResponseRedirect('/data/patient/all/0')
 
+@login_required
 def patientEditView(request, pk):
     context = {}
     context['patient'] = Patient.objects.get(pk=pk)
@@ -57,6 +63,7 @@ def patientEditView(request, pk):
 
     return render(request, 'patient_edit.html', context)
 
+@login_required
 def getNewPatient(request):
     if request.method == 'POST':
         form = patientAddForm(request.POST)
@@ -65,34 +72,27 @@ def getNewPatient(request):
             return HttpResponseRedirect('/data/patient/details/' + str(patient.pk))
     return HttpResponseRedirect('/data/patient/all/0')
 
+@login_required
 def patientNewView(request):
     context = {}
     context['form'] = patientAddForm()
 
     return render(request, 'patient_add.html', context)
 
-class patientAllView(TemplateView):
-    template_name = "patient.html"
+@login_required
+def patientAllView(request, offset):
+    context = {}
+    context['patient_list'] = Patient.objects.order_by('patient_name')[offset*100:offset*100+100]
+    context['offset'] = offset
+    context['start_index'] = offset * 100 + 1
+    context['end_index'] = offset * 100 + context['patient_list'].count()
+    context['previous'] = max(offset-1, 0)
+    context['next'] = min(offset+1,  (offset * 100 + context['patient_list'].count())//100)
+    return render(request, 'patient.html', context)
 
-    def get_context_data(self, **kwargs):
-        offset = self.kwargs['offset']
-
-        context = super().get_context_data(**kwargs)
-        context['patient_list'] = Patient.objects.order_by('patient_name')[offset*100:offset*100+100]
-        context['offset'] = offset
-        context['start_index'] = offset * 100 + 1
-        context['end_index'] = offset * 100 + context['patient_list'].count()
-        context['previous'] = max(offset-1, 0)
-        context['next'] = min(offset+1,  (offset * 100 + context['patient_list'].count())//100)
-        return context
-
-class patientDetailsView(TemplateView):
-    template_name = "patient_details.html"
-
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs['pk']
-
-        context = super().get_context_data(**kwargs)
-        context['patient'] = Patient.objects.get(pk=pk)
-        context['offset'] = pk // 100
-        return context
+@login_required
+def patientDetailsView(request, pk):
+    context = {}
+    context['patient'] = Patient.objects.get(pk=pk)
+    context['offset'] = pk // 100
+    return render(request, 'patient_details.html', context)

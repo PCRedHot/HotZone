@@ -4,17 +4,21 @@ from django.views.generic import TemplateView
 from hotzoneData.models import Place
 from .forms import locationEditForm
 import urllib.parse, requests
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
+@login_required
 def redirectView(request):
     res = redirect('/data/location/all/0')
     return res
 
+@login_required
 def deleteLocation(request, pk):
     location = Place.objects.get(pk=pk)
     location.delete()
     return redirect('/data/location/all/0')
 
+@login_required
 def locationSearch(request, offset):
     if 'location_search' not in request.GET:
         return redirectView(request)
@@ -38,6 +42,7 @@ def locationSearch(request, offset):
 
     return render(request, 'location_search.html', context)
 
+@login_required
 def getEditLocation(request, pk):
     if request.method == 'GET':
         data = request.GET
@@ -63,6 +68,7 @@ def getEditLocation(request, pk):
         place.save()
         return HttpResponseRedirect('/data/location/details/' + str(pk))
 
+@login_required
 def locationEditGeoDataView(request, pk):
     location = Place.objects.get(pk=pk)
     if ('location_query' in request.GET):
@@ -78,12 +84,14 @@ def locationEditGeoDataView(request, pk):
     else:
         return render(request, 'location_add.html', { 'result_list': [], 'type': 1, 'res_code': 200, 'location': location})
 
+@login_required
 def locationEditView(request, pk):
     context = {}
     context['location'] = Place.objects.get(pk=pk)
     context['form'] = locationEditForm(pk=pk)
     return render(request, 'location_edit.html', context)
 
+@login_required
 def getNewLocation(request):
     if request.method == 'GET':
         data = request.GET
@@ -93,6 +101,7 @@ def getNewLocation(request):
         return HttpResponseRedirect('/data/location/details/' + str(place.pk))
     return HttpResponseRedirect('/data/location/all/0')
 
+@login_required
 def locationNewView(request):
     if ('location_query' in request.GET):
         query = request.GET['location_query']
@@ -108,28 +117,21 @@ def locationNewView(request):
     else:
         return render(request, 'location_add.html', { 'result_list': [], 'type': 0, 'res_code': 200})
 
-class locationAllView(TemplateView):
-    template_name = "location.html"
+@login_required
+def locationAllView(request, offset):
+    context = {}
+    context['location_list'] = Place.objects.order_by('location')[offset*100:offset*100+100]
+    context['offset'] = offset
+    context['start_index'] = offset * 100 + 1
+    context['end_index'] = offset * 100 + context['location_list'].count()
+    context['previous'] = max(offset-1, 0)
+    context['next'] = min(offset+1,  (offset * 100 + context['location_list'].count())//100)
+    return render(request, 'location.html', context)
 
-    def get_context_data(self, **kwargs):
-        offset = self.kwargs['offset']
-
-        context = super().get_context_data(**kwargs)
-        context['location_list'] = Place.objects.order_by('location')[offset*100:offset*100+100]
-        context['offset'] = offset
-        context['start_index'] = offset * 100 + 1
-        context['end_index'] = offset * 100 + context['location_list'].count()
-        context['previous'] = max(offset-1, 0)
-        context['next'] = min(offset+1,  (offset * 100 + context['location_list'].count())//100)
-        return context
-
-class locationDetailsView(TemplateView):
-    template_name = "location_details.html"
-
-    def get_context_data(self, **kwargs):
-        pk = self.kwargs['pk']
-
-        context = super().get_context_data(**kwargs)
-        context['location'] = Place.objects.get(pk=pk)
-        context['offset'] = (pk-1) // 100
-        return context
+@login_required
+def locationDetailsView(request, pk):
+    context = {}
+    context = super().get_context_data(**kwargs)
+    context['location'] = Place.objects.get(pk=pk)
+    context['offset'] = (pk-1) // 100
+    return render(request, 'location_details.html', context)

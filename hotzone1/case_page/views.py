@@ -1,13 +1,16 @@
 from django.shortcuts import render, redirect
 from django.views.generic import TemplateView
+from django.contrib.auth.decorators import login_required
 from hotzoneData.models import *
 from .forms import *
 import urllib.parse, requests
 
 # Create your views here.
+@login_required
 def redirectChooseDisease(request):
     return redirect('/data/case/disease/all/0')
 
+@login_required
 def chooseDiseaseView(request, offset):
     context = {}
     context['disease_list'] = Disease.objects.order_by('disease_name')[offset*100:offset*100+100]
@@ -18,6 +21,7 @@ def chooseDiseaseView(request, offset):
     context['next'] = min(offset+1,  (offset * 100 + context['disease_list'].count())//100)
     return render(request, 'case_choose_disease.html', context)
 
+@login_required
 def chooseDiseaseSearchView(request, offset):
     if 'disease_search' not in request.GET:
         return redirectChooseDisease(request)
@@ -38,9 +42,11 @@ def chooseDiseaseSearchView(request, offset):
     context['q'] = q
     return render(request, 'case_choose_disease_search.html', context)
 
+@login_required
 def redirectDiseaseCase(request, pk):
     return redirect('/data/case/disease/'+ str(pk) +'/0')
 
+@login_required
 def diseaseCaseView(request, pk, offset):
     context = {}
     context['case_list'] = Case.objects.filter(disease_id=pk).order_by('case_number')[offset*100:offset*100+100]
@@ -52,6 +58,7 @@ def diseaseCaseView(request, pk, offset):
     context['next'] = min(offset+1, (offset * 100 +context['case_list'].count())//100)
     return render(request, 'case_disease.html', context)
 
+@login_required
 def diseaseCaseSearchView(request, pk, offset):
     if 'case_search' not in request.GET:
         return redirectDiseaseCase(request, pk)
@@ -76,6 +83,7 @@ def diseaseCaseSearchView(request, pk, offset):
     context['q'] = q
     return render(request, 'case_disease_search.html', context)
 
+@login_required
 def getNewCase(request, pk):
     if request.method == 'POST':
         form = caseAddForm(request.POST)
@@ -89,6 +97,7 @@ def getNewCase(request, pk):
     else:
         return redirectDiseaseCase(request, pk)
 
+@login_required
 def diseaseCaseAddView(request, pk):
     context = {
     'form': caseAddForm(),
@@ -96,12 +105,14 @@ def diseaseCaseAddView(request, pk):
     }
     return render(request, 'case_disease_add.html', context)
 
+@login_required
 def caseDeleteView(request, pk):
     case = Case.objects.get(pk=pk)
     disease_pk = case.disease.pk
     case.delete()
     return redirect('/data/case/disease/' + str(disease_pk) + '/0')
 
+@login_required
 def caseDetailsView(request, pk):
     case = Case.objects.get(pk=pk)
     context = {
@@ -111,6 +122,7 @@ def caseDetailsView(request, pk):
     }
     return render(request, 'case_details.html', context)
 
+@login_required
 def locationDeleteView(request, pk):
     location = CasePlace.objects.get(pk=pk)
     case = location.case
@@ -120,6 +132,7 @@ def locationDeleteView(request, pk):
 def redirectLocationDetails(request, pk):
     return redirect('/data/case/location/details/' + str(pk))
 
+@login_required
 def getLocationEditView(request, pk):
     if request.method == 'POST':
         form = locationEditForm(request.POST, pk=pk)
@@ -135,6 +148,7 @@ def getLocationEditView(request, pk):
     else:
         return redirectLocationDetails(request, pk)
 
+@login_required
 def locationEditView(request, pk):
     context = {
     'location': CasePlace.objects.get(pk=pk),
@@ -142,12 +156,14 @@ def locationEditView(request, pk):
     }
     return render(request, 'case_location_edit.html', context)
 
+@login_required
 def locationDetailsView(request, pk):
     context = {
     'location': CasePlace.objects.get(pk=pk)
     }
     return render(request, 'case_location_details.html', context)
 
+@login_required
 def getNewPlace(request, pk):
     if request.method == 'GET':
         data = request.GET
@@ -157,6 +173,7 @@ def getNewPlace(request, pk):
         return redirect('/data/case/location/details/add/'+str(pk) + '?location_pk=' + str(place.pk))
     return redirect('/data/case/location/details/add/query/'+str(pk))
 
+@login_required
 def locationAddSearchView(request, pk):
     context = {
     'case': Case.objects.get(pk=pk),
@@ -174,6 +191,7 @@ def locationAddSearchView(request, pk):
         return render(request, 'case_location_add_search.html', context)
     return render(request, 'case_location_add_search.html', context)
 
+@login_required
 def getLocationAddView(request, pk):
     if request.method == 'POST':
         if 'location_pk' not in request.GET:
@@ -186,6 +204,7 @@ def getLocationAddView(request, pk):
         return redirect('/data/case/location/details/' + str(casePlace.pk))
     return redirect('/data/case/details/' + str(pk))
 
+@login_required
 def locationAddView(request, pk):
     if 'location_pk' not in request.GET:
          return redirect('/data/case/location/details/add/query/' + str(pk))
