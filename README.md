@@ -1,5 +1,4 @@
-# HotZone---github
-# Super Quick Intro
+# HotZone---github: Quick Start Guide
 
 This tutorial is use to test the Django server locally.
 
