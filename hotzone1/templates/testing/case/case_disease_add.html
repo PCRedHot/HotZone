@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
+
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Case</b></h1>
+  <h3>New Case of {{disease.disease_name}}</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'case_disease' disease.pk '0' %}">&lt; Back</a> </div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l3 m2 s1"></div>
+    <form class="w3-col w3-container l6 m8 s10 w3-border w3-padding-32" action="submit/" method="post">
+      {% csrf_token %}
+      {% load widget_tweaks %}
+      <div class="w3-margin">
+        <label>Patient:</label>
+        {% render_field form.patient class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        <label>Date Confirmed:</label>
+        {% render_field form.date_confirmed type="date" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        &nbsp;&nbsp;&nbsp;&nbsp;{% render_field form.is_local  %}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local Case
+      </div>
+
+      <div class="w3-margin w3-padding">
+        <input type="submit" class="w3-button w3-border w3-right w3-center">
+      </div>
+    </form>
+    <div class="w3-col w3-container l3 m2 s1"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-32"></div>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>

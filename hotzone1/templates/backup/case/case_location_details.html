@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
+
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Case</b></h1>
+  <h3>{{ location.case.disease.disease_name }}</h3>
+  <h4>{{ location.case.patient.patient_name }}</h4>
+  <h4>{{ location.place.location }}</h4>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'case_details' location.case.pk %}">&lt; Back</a> </div>
+        <div class="w3-col w3-right w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'case_location_edit' location.pk %}">Edit</a> </div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container w3-left l3 m2 s1"></div>
+    <div class="w3-col w3-container w3-right l3 m2 s1"></div>
+    <div class="w3-rest w3-container">
+      <h4>Location Visited Information</h4>
+      <div class="w3-border w3-padding">
+        <p>Location: {{location.place.location}} ({{location.category}})</p>
+        <p>Address: {{location.place.address}}</p>
+        <p>Date: {{location.date_from}} - {{location.date_to}}</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>

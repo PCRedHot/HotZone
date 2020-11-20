@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
+
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Location</b></h1>
+  {% if type == 0 %}
+  <h3>Add New Location</h3>
+  {% elif type == 1 %}
+  <h3>Edit {{ location.location }}</h3>
+  {% endif %}
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <form class="w3-row" method="get"  action="">
+        <div class="w3-col w3-right w3-container w3-center" style="width:100px">
+          <input class="w3-button w3-white w3-border" type="submit" value="Search">
+        </div>
+        {% if type == 0 %}
+        <div class="w3-col w3-left w3-container w3-center" style="width:120px"> <a class="w3-button w3-white w3-border" href="{% url 'location_page' '0' %}"> &lt; Back</a> </div>
+        {% elif type == 1 %}
+        <div class="w3-col w3-left w3-container w3-center" style="width:120px"> <a class="w3-button w3-white w3-border" href="{% url 'location_edit' location.pk %}"> &lt; Back</a> </div>
+        {% endif %}
+        <div class="w3-rest w3-center">
+          <input class="w3-input" type="text" name="location_query" placeholder="Search a location in Hong Kong"></input>
+        </div>
+      </form>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+{% if res_code != 200 and res_code != 400 %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing 0 result </div>
+    </div>
+    <div class="w3-container">
+      <div class="w3-border w3-block w3-left-align w3-padding">
+        <div class="w3-padding"></div>
+        <b>&nbsp; Error: Cannot get location data from GeoData!</b>
+        <div class="w3-padding"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% elif result_list|length > 0 %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      {% if result_list|length == 1 %}
+      <div style="font-size:80%;color:grey">&nbsp;Showing 1 result </div>
+      {% else %}
+      <div style="font-size:80%;color:grey">&nbsp;Showing {{ result_list|length }} results </div>
+      {% endif %}
+    </div>
+    <div class="w3-container">
+      {% for result in result_list %}
+      <div class="w3-button w3-border w3-block w3-left-align w3-padding" onclick="addLocation({{ forloop.counter0 }})") style="text-overflow:ellipsis">
+          <div>&nbsp;> Location: {{result.nameEN}}</div>
+          <div>&nbsp;&nbsp;&nbsp; Address: {{result.addressEN}}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% elif result_list %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing 0 result </div>
+    </div>
+    <div class="w3-container">
+      <div class="w3-border w3-block w3-left-align w3-padding">
+        <div class="w3-padding"></div>
+        <b>&nbsp; No location data in GeoData Matches!</b>
+        <div class="w3-padding"></div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+
+{{ result_list|json_script:"result_list" }}
+
+{% if type == 0 %}
+<script type="text/javascript">
+  function addLocation(index){
+    let item = JSON.parse(document.getElementById('result_list').textContent)[index];
+    item.x = Math.round(item.x);
+    item.y = Math.round(item.y);
+    if (confirm(`Add the following location to database?\nLocation: ${item.nameEN}\nAddress: ${item.addressEN}\nx-coordinate: ${item.x}\ny-coordinate: ${item.y}`)){
+      const Http = new XMLHttpRequest();
+      const params = `?location=${item.nameEN}&address=${item.addressEN}&x=${item.x}&y=${item.y}`;
+      window.location.href = window.location.href.substring(0,window.location.href.indexOf('?location_query=')) + 'submit' + params;
+
+    }
+  }
+</script>
+{% elif type == 1 %}
+<script type="text/javascript">
+  function addLocation(index){
+    let item = JSON.parse(document.getElementById('result_list').textContent)[index];
+    item.x = Math.round(item.x);
+    item.y = Math.round(item.y);
+    if (confirm(`Change the entry to the follow?\nLocation: ${item.nameEN}\nAddress: ${item.addressEN}\nx-coordinate: ${item.x}\ny-coordinate: ${item.y}`)){
+      const Http = new XMLHttpRequest();
+      const params = `?location=${item.nameEN}&address=${item.addressEN}&x=${item.x}&y=${item.y}`;
+      window.location.href = window.location.href.substring(0,window.location.href.indexOf('query/')) + 'submit/' + {{ location.pk }} + params;
+    }
+  }
+</script>
+{% endif %}
+
+{% if res_code != 200 and res_code != 400 %}
+<script type="text/javascript">
+        function failed() {
+            alert('Cannot get Location Data from GeoData!\n(Response code: {{ res_code }})');
+        }
+        window.onload = failed();
+</script>
+{% endif %}
+
+{% if res_code == 400 %}
+<script type="text/javascript">
+        function failed() {
+            alert('No location data from GeoData matches!');
+        }
+        window.onload = failed();
+</script>
+{% endif %}

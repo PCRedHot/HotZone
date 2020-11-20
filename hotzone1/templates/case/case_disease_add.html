@@ -1,3 +1,63 @@
+{% extends 'base.html' %} 
+
+{% block title %} | Create New Case of {{disease.disease_name}} {% endblock %}
+
+{% block content %}
+
+<!-- Content -->
+<div class="container">
+  <div class="row">
+    <form class="col s12 m8 l6 offset-m2 offset-l3" action="submit/" method="post">
+    {% csrf_token %} {% load widget_tweaks %}
+      <div class="row">
+        <div class="input-field">
+          {% render_field form.patient id="patient" class="validate input-field" autofocus="autofocus" required="required" %}
+          <label for="patient">Patient</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field">
+          {% render_field form.date_confirmed id="date_confirm" type="text" class="validate datepicker" required="required" %}
+          <label for="date_confirm">Date Confirmed</label>
+        </div>
+      </div>
+      <div class="row">
+        <label>
+          {% render_field form.is_local class="filled-in" %}
+          <Span>Local Case</Span>
+        </label>
+      </div>
+
+      <div class="row">
+        <button class="waves-effect waves-light btn-small" type="submit">
+        <i class="material-icons right">add</i>Create
+        </button>
+        <a
+        class="waves-effect waves-light btn-small orange darken-4"
+        style="float: right"
+        href="{% url 'disease_page' 0 %}"
+      >
+        <i class="material-icons right">cancel</i>Cancel
+      </a>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- JQuery -->
+<script>
+  $(document).ready(function(){
+    $('.datepicker').datepicker({"format":'yyyy-mm-dd'});
+    $('select').formSelect();
+  });
+</script>
+<!-- End of Content -->
+{% endblock %}
+
+
+
+
+
 <!DOCTYPE html>
 <html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,8 +95,8 @@ h1,h3 {font-family: "Raleway", sans-serif}
       {% csrf_token %}
       {% load widget_tweaks %}
       <div class="w3-margin">
-        <label>Patient:</label>
-        {% render_field form.patient class+="w3-input w3-border" %}
+        <label>disease:</label>
+        {% render_field form.disease class+="w3-input w3-border" %}
       </div>
       <div class="w3-margin">
         <label>Date Confirmed:</label>

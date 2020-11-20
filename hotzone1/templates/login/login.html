@@ -1,48 +1,142 @@
 <!DOCTYPE html>
 <html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>HotZone | Login</title>
+    <meta name="description" content="HotZone by Tom Mong" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-<style>
-h1,h5 {font-family: "Raleway", sans-serif}
-</style>
+    {% load static %}
+    <!-- favicon -->
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static
+    "favicon/apple-touch-icon.png" %}"> <link rel="icon" type="image/png"
+    sizes="32x32" href="{% static "favicon/favicon-32x32.png" %}"> <link
+    rel="icon" type="image/png" sizes="16x16" href="{% static
+    "favicon/favicon-16x16.png" %}"> <link rel="manifest" href="{% static
+    "favicon/site.webmanifest" %}">
 
-<div class="w3-content" style="max-width:1400px">
+    <!-- Compiled and minified CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css"
+    />
 
-<header class="w3-container w3-center w3-padding-32">
-  <h1><b>HotZone</b></h1>
-</header>
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
 
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container w3-right l4 m3 s2"></div>
-    <div class="w3-col w3-container w3-left l4 m3 s2"></div>
-    <form class="w3-rest w3-container w3-border w3-padding" method="post" action="attempt/">
-      {% csrf_token %} 
-      <div class="w3-margin w3-center">
-        <h3>Login</h3>
+    <!-- Compiled and minified JavaScript -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.js"
+      integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"
+      integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+    <!-- Custom CSS-->
+    <style>
+      #main_content {
+        margin-top: 15vh;
+      }
+      .collection-item {
+        font-size: 3ch;
+        font-weight: 300;
+      }
+      .material-icons {
+        display: block;
+      }
+      .notification {
+        display: block;
+        margin-left: 10px;
+        margin-bottom: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <div class="nav-wrapper teal darken-2">
+        <a href="{% url 'login_page' %}" class="brand-logo center">HotZone</a>
       </div>
-      <div class="w3-margin">
-        <label>Username:</label>
-        <input type="text" name="username" maxlength="100" class="w3-input w3-border" placeholder="Username" required id="id_username">
-      </div>
-      <div class="w3-margin">
-        <label>Password:</label>
-        <input type="password" name="password" maxlength="100" class="w3-input w3-border" placeholder="Password" required id="id_password">
-      </div>
-      {% if isLoginFailed%}
-      <div class="w3-margin">
-        <p class="w3-text-red">Incorrect Username or Password.</p>
-      </div>
-      {% endif %}
-      <div class="w3-margin w3-padding w3-center">
-        <input type="submit" class="w3-button w3-border w3-center" value="Login" style="width:100px">
-      </div>
-    </form>
-  </div>
-</div>
+    </nav>
 
-</div>
+    <div class="container">
+      <!-- Page Content goes here -->
 
-<!-- footer -->
-<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+      <div id="main_content">
+        <div class="row">
+          <div class="col s12 m8 l6 offset-l3 offset-m2">
+            <div class="card">
+              <div class="card-content">
+                <div class="row">
+                  <!-- Input here -->
+                  <form
+                    id="login_form"
+                    class="col s12"
+                    method="post"
+                    action="attempt/"
+                  >
+                    {% csrf_token %}
+                    <div class="input-field col s12">
+                      <input
+                        id="id_username"
+                        type="text"
+                        class="validate"
+                        name="username"
+                        placeholder="Username"
+                        autofocus
+                        required
+                      />
+                      <label for="text">Username</label>
+                    </div>
+                    <div class="input-field col s12">
+                      <input
+                        id="id_password"
+                        name="password"
+                        type="password"
+                        class="validate"
+                        placeholder="Password"
+                        required
+                      />
+                      <label for="password">Password</label>
+                    </div>
+                    {% if isLoginFailed%}
+                    <span class="red-text text-darken-1 notification"
+                      >Wrong username or password! Please try again!</span
+                    >
+                    {% endif %}
+
+                    <!--Login Btn-->
+                    <div class="center">
+                      <button
+                        class="waves-effect waves-light btn-small"
+                        type="submit"
+                        name="action"
+                      >
+                        Login <i class="material-icons right">send</i>
+                      </button>
+                    </div>
+                  </form>
+                  <!-- End input-->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function () {
+      $("a.submit").click(function () {
+        document.getElementById("login_form").submit();
+      });
+    });
+  </script>
+</html>

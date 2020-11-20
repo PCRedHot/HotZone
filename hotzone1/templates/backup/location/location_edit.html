@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
+
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Location</b></h1>
+  <h3>Edit {{ location.location }}</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'location_details' location.pk %}">&lt; Back</a> </div>
+        <div class="w3-button w3-border w3-right w3-center w3-text-red" style="width:100px" onclick="deleteLocation()">DELETE</div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l3 m2 s1"></div>
+    <form class="w3-col w3-container l6 m8 s10 w3-border w3-padding-32" action="submit/{{ location.pk }}" method="post">
+      {% csrf_token %}
+      {% load widget_tweaks %}
+      <div class="w3-margin">
+        <label>Location:</label>
+        {% render_field form.location type="text" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        <label>Address:</label>
+        {% render_field form.address type="text" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        <label>X-Coordinate:</label>
+        {% render_field form.x type="text" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        <label>Y-Coordinate:</label>
+        {% render_field form.y type="text" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin w3-padding">
+        <input type="submit" class="w3-button w3-border w3-right w3-center">
+        <a class="w3-button w3-border w3-left w3-center" href="{% url 'location_edit_query' location.pk %}">Search in GeoData</a>
+      </div>
+    </form>
+    <div class="w3-col w3-container l3 m2 s1"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-32"></div>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+
+{{ location.location|json_script:"location" }}
+<script>
+function deleteLocation() {
+      if (confirm(`Delete location: ${document.getElementById('location').textContent} ?`)){
+        alert("Deleted!");
+        window.location.href = "{% url 'location_delete' location.pk %}";
+      };
+    }
+
+</script>

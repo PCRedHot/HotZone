@@ -1,0 +1,20 @@
+{% extends 'main.html' %} 
+
+{% block title %} | Home {% endblock %} 
+{% block content %}
+
+  <div id="main_content" class="container center">
+      <div class="collection">
+        <a href="{% url 'patient_page' '0' %}" class="collection-item"><i class="small material-icons">create</i>
+          Create New Case</a>
+        <a href="{% url 'patient_page' '0' %}" class="collection-item"><i class="small material-icons">folder_shared</i>
+          View Patient</a>
+        <a href="{% url 'disease_page' '0' %}" class="collection-item"><i class="small material-icons">healing</i>
+          View Disease</a>
+        <a href="{% url 'location_page' '0' %}" class="collection-item"><i class="small material-icons">add_location</i>
+          View Location</a>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

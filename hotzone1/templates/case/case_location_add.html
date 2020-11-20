@@ -1,66 +1,70 @@
-<!DOCTYPE html>
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% extends 'base.html' %} 
+
+{% block title %} | New Location: {{ location.location }} {% endblock %} 
+
+{% block content %}
+
+<!--
+  {% comment %} 
+  
+  {{ case.disease.disease_name }}
+  {{case.patient.patient_name}} 
+  {{ case.case_number }} 
+
+  href="{% url 'case_location_add_search' case.pk %}?location_query="
+  
+  {% endcomment %}
+-->
 
 <style>
-h1,h3 {font-family: "Raleway", sans-serif}
+  h6{
+    line-height: 200%;
+  }
 </style>
 
+  <div class="row">
+    <div class="col s12 m8 l6 offset-m2 offset-l3">
+      <div class="card">
 
-<!-- Header -->
-<header class="w3-container w3-center w3-padding-32">
-  <h1><b>HotZone - Case</b></h1>
-  <h3>{{ case.disease.disease_name }} - {{case.patient.patient_name}} ({{ case.case_number }})</h3>
-  <h3>Add Locations Visited</h3>
-</header>
-
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container l2 m1 s0"></div>
-    <div class="w3-col w3-container l8 m10 s12">
-      <div class="w3-row">
-        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'case_details' case.pk %}">&lt; Back</a> </div>
+        <div class="card-content">
+          <span class="card-title">#{{ case.case_number }} : {{case.patient.patient_name}}</span>
+          <!-- Form -->
+            <form action="submit/{{case.pk}}?location_pk={{location_pk}}" method="post">
+              {% csrf_token %} {% load widget_tweaks %}
+              <div class="input-field">
+                {% render_field form.location %}
+                <label>Location:</label>
+              </div>
+              <div class="input-field">
+                {% render_field form.category %}
+                <label>Category:</label>
+              </div>
+              <div class="input-field">
+                <label>Date From:</label>
+                {% render_field form.date_from type="text" class="validate datepicker" required="required" %}
+              </div>
+              <div class="input-field">
+                <label>Date To:</label>
+                {% render_field form.date_to type="text" class="validate datepicker" required="required" %}
+              </div>
+              <a class="waves-effect waves-light btn-small" href="{% url 'case_location_add_search' case.pk %}?location_query=">
+                <i class="material-icons right">cancel</i>Cancel
+              </a>
+              <button class="waves-effect waves-light btn-small" style="float: right" type="submit">
+                <i class="material-icons right">check</i>Done
+              </button>
+            </form>
+            <!-- End Form -->
+        </div>
       </div>
     </div>
-    <div class="w3-col w3-container l2 m1 s0"></div>
   </div>
-</div>
 
-<div class="w3-container w3-padding-16"></div>
+<script>
+  $(document).ready(function(){
+    $('.datepicker').datepicker({"format":'yyyy-mm-dd'});
+    $('select').formSelect();
+  });
+</script>
 
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container l3 m2 s1"></div>
-    <form class="w3-col w3-container l6 m8 s10 w3-border w3-padding-32" action="submit/{{case.pk}}?location_pk={{location_pk}}" method="post">
-      {% csrf_token %}
-      {% load widget_tweaks %}
-      <div class="w3-margin">
-        <label>Location:</label>
-        {% render_field form.location class+="w3-input w3-border" %}
-      </div>
-      <div class="w3-margin">
-        <label>Category:</label>
-        {% render_field form.category %}
-      </div>
-      <div class="w3-margin">
-        <label>Date From:</label>
-        {% render_field form.date_from type="date" class+="w3-input w3-border" %}
-      </div>
-      <div class="w3-margin">
-        <label>Date To:</label>
-        {% render_field form.date_to type="date" class+="w3-input w3-border" %}
-      </div>
-
-      <div class="w3-margin w3-padding">
-        <input type="submit" class="w3-button w3-border w3-right w3-center">
-      </div>
-    </form>
-    <div class="w3-col w3-container l3 m2 s1"></div>
-  </div>
-</div>
-
-<div class="w3-container w3-padding-32"></div>
-
-<!-- footer -->
-<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+{% endblock %}

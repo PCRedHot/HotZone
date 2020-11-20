@@ -1,45 +1,42 @@
-<!DOCTYPE html>
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% extends 'base.html' %} 
+
+{% block title %} | Location Info: {{ location.location }} {% endblock %} 
+
+{% block content %}
+
+
+
+<!--
+  {% url 'location_edit' location.pk %}
+  Edit User
+
+  {% url 'location_page' 0 %}
+  Back
+-->
 
 <style>
-h1,h3 {font-family: "Raleway", sans-serif}
+  h6{
+    line-height: 200%;
+  }
 </style>
 
-
-<!-- Header -->
-<header class="w3-container w3-center w3-padding-32">
-  <h1><b>HotZone - Location</b></h1>
-  <h3>{{ location.location }}</h3>
-</header>
-
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container l2 m1 s0"></div>
-    <div class="w3-col w3-container l8 m10 s12">
-      <div class="w3-row">
-        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'location_page' offset %}">&lt; Back</a> </div>
-        <div class="w3-col w3-right w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'location_edit' location.pk %}">Edit</a> </div>
+  <div class="row">
+    <div class="col s12 m8 l6 offset-m2 offset-l3">
+      <div class="card">
+        <div class="card-content">
+          <span class="card-title">{{ location.location }}</span>
+          <h6>Address: {{ location.address }}</h6>
+          <h6>Coordinates: ({{ location.x_coor }}, {{ location.y_coor }})</h6>
+          <a class="waves-effect waves-light btn-small" href="{% url 'location_page' offset %}">
+            <i class="material-icons right">cancel</i>Back
+          </a>
+          <a href="{% url 'location_edit' location.pk %}" class="waves-effect waves-light btn-small orange darken-4" style="float: right">
+            <i class="material-icons right">create</i>Edit
+          </a>
+        </div>
       </div>
     </div>
-    <div class="w3-col w3-container l2 m1 s0"></div>
   </div>
-</div>
 
-<div class="w3-container w3-padding-16"></div>
-
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container w3-right l3 m2 s1"></div>
-    <div class="w3-col w3-container w3-left l3 m2 s1"></div>
-    <div class="w3-rest w3-container w3-border w3-padding">
-      <p>Location: {{ location.location }}</p>
-      <p>Address: {{ location.address }}</p>
-      <p>Coordinates (x, y): {{ location.x_coor }}, {{ location.y_coor }}</p>
-    </div>
-  </div>
-</div>
-
-<!-- footer -->
-<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+<!-- End of Content -->
+{% endblock %}

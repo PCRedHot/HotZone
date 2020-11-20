@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
+
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Disease</b></h1>
+  <h3>Add New Disease</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'disease_page' '0' %}">&lt; Back</a> </div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l3 m2 s1"></div>
+    <form class="w3-col w3-container l6 m8 s10 w3-border w3-padding-32" action="submit/" method="post">
+      {% csrf_token %}
+      {% load widget_tweaks %}
+      <div class="w3-margin">
+        <label>Disease Name:</label>
+        {% render_field form.disease_name type="text" class+="w3-input w3-border" placeholder="Disease Name" %}
+      </div>
+      <div class="w3-margin">
+        <label>Virus:</label>
+        {% render_field form.virus type="text" class+="w3-input w3-border" placeholder="Virus" %}
+      </div>
+      <div class="w3-margin">
+        <label>Max Infectious Period:</label>
+        {% render_field form.max_infectious_period type="text" class+="w3-input w3-border" placeholder="Max Infectious Period" %}
+      </div>
+
+      <div class="w3-margin w3-padding">
+        <input type="submit" class="w3-button w3-border w3-right w3-center">
+      </div>
+    </form>
+    <div class="w3-col w3-container l3 m2 s1"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-32"></div>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>

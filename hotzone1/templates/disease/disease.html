@@ -1,120 +1,69 @@
-<!DOCTYPE html>
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+{% extends 'base.html' %} 
 
-<style>
-h1,h3 {font-family: "Raleway", sans-serif}
-</style>
+{% block title %} | Disease {% endblock %} 
 
+{% block content %}
 
-<!-- Header -->
-<header class="w3-container w3-center w3-padding-32">
-  <h1><b>HotZone - Disease</b></h1>
-</header>
+<!-- Content -->
 
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container l2 m1 s0"></div>
-    <div class="w3-col w3-container l8 m10 s12">
-      <form class="w3-row" method="get"  action="query/0">
-        <div class="w3-col w3-right w3-container w3-center" style="width:100px">
-          <input class="w3-button w3-white w3-border" type="submit" value="Search">
-        </div>
-        <div class="w3-col w3-left w3-container w3-center" style="width:120px"> <a class="w3-button w3-white w3-border" href="{% url 'main_page' %}"> &lt; Back</a> </div>
-        <div class="w3-rest w3-center">
-          <input class="w3-input" type="text" name="disease_search" placeholder="Search Disease"></input>
-        </div>
-      </form>
-    </div>
-    <div class="w3-col w3-container l2 m1 s0"></div>
-  </div>
-</div>
-
-<div class="w3-container w3-padding-16"></div>
-
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container l2 m1 s0"></div>
-    <div class="w3-col w3-container l8 m10 s12">
-      <div class="w3-row" method="get"  action="query/0">
-        {% if previous != offset %}
-        <div class="w3-col w3-left w3-container w3-center" style="width:150px">
-          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'disease_page' previous %}">&lt; Previous</a>
-        </div>
-        {% endif %}
-        {% if next != offset %}
-        <div class="w3-col w3-right w3-container w3-center" style="width:150px">
-          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'disease_page' next %}">Next &gt;</a>
-        </div>
-        {% endif %}
+<form class="row" method="get" action="query/0">
+  <div class="container">
+    <div class="row">
+      <div class="input-field">
+        <input
+          type="text"
+          name="disease_search"
+          autofocus
+        />
+        <label class="active" for="first_name2">Search disease</label>
       </div>
     </div>
-    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="row">
+      <button class="waves-effect waves-light btn-small" type="submit">
+        <i class="material-icons right">arrow_forward</i>Search
+      </button>
+      <a
+        class="waves-effect waves-light btn-small orange darken-4"
+        style="float: right"
+        href="{% url 'disease_add' %}"
+      >
+        <i class="material-icons right">add</i>Create New disease
+      </a>
+    </div>
   </div>
-</div>
+</form>
 
 
 {% if disease_list.count == 0 %}
-<div class="w3-row">
-  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
-  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
-  <div class="w3-rest w3-container">
-    <div class="w3-container">
-      <div style="font-size:80%;color:grey">&nbsp;Showing 0 result </div>
-    </div>
-    <div class="w3-container">
-      <a class="w3-button w3-border w3-block w3-left-align w3-padding w3-text-grey" href="{% url 'disease_add' %}">
-          &nbsp; -> add a new Disease
-      </a>
-      <div class="w3-border w3-block w3-left-align w3-padding">
-        > No Disease In Database
-      </div>
-    </div>
-  </div>
-</div>
+<script>
+  $(document).ready(function(){
+    M.toast({html: 'No disease Found'})
+  });
+</script>
+
 {% else %}
-<div class="w3-row">
-  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
-  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
-  <div class="w3-rest w3-container">
-    <div class="w3-container">
-      <div style="font-size:80%;color:grey">&nbsp;Showing {{ disease_list.count }} results from {{ start_index }} to {{ end_index }}</div>
-    </div>
-    <div class="w3-container">
-      <a class="w3-button w3-border w3-block w3-left-align w3-padding w3-text-grey" href="{% url 'disease_add' %}">
-          &nbsp; -> add a new disease
-      </a>
-      {% for disease in disease_list %}
-      <a class="w3-button w3-border w3-block w3-left-align w3-padding" href="{% url 'disease_details' disease.pk %}">
-          &nbsp;> {{disease.disease_name}} {{disease.virus}}
-      </a>
-      {% endfor %}
-    </div>
+
+<div class="container">
+  <div style="font-size: 80%; color: grey">
+    &nbsp;Showing {{ disease_list.count }} results from {{ start_index }} to {{ end_index }}
+  </div>
+  <div class="collection">
+    <!-- Start Collection -->
+
+    {% for disease in disease_list %}
+    <!-- 
+        {{disease.disease_name}}
+        {{disease.identify_number}}
+        {% url 'disease_details' disease.pk %}
+      -->
+    <a href="{% url 'disease_details' disease.pk %}" class="collection-item"
+      >{{disease.disease_name}}<span class="new badge red" data-badge-caption=""
+        >{{disease.virus}}</span
+      ></a
+    >
+    {% endfor %}
   </div>
 </div>
 {% endif %}
-
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container l2 m1 s0"></div>
-    <div class="w3-col w3-container l8 m10 s12">
-      <div class="w3-row" method="get"  action="query/0">
-        {% if previous != offset %}
-        <div class="w3-col w3-left w3-container w3-center" style="width:150px">
-          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'disease_page' previous %}">&lt; Previous</a>
-        </div>
-        {% endif %}
-        {% if next != offset %}
-        <div class="w3-col w3-right w3-container w3-center" style="width:150px">
-          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'disease_page' next %}">Next &gt;</a>
-        </div>
-        {% endif %}
-      </div>
-    </div>
-    <div class="w3-col w3-container l2 m1 s0"></div>
-  </div>
-</div>
-
-<!-- footer -->
-<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+<!-- End of Content -->
+{% endblock %}
