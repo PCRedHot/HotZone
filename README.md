@@ -1,9 +1,9 @@
-# HotZone---github: Quick Start Guide
+# HotZone: Quick Start Guide
 
 This tutorial is use to test the Django server locally.
 
 1. Get the git source code:
-2. `git clone https://github.com/PCRedHot/HotZone---github.git` 
+   `git clone https://github.com/PCRedHot/HotZone---github.git` 
 
 2. Go to the directory:
 
