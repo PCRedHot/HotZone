@@ -1,53 +1,61 @@
-{% extends 'base.html' %} 
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-{% block title %} | Create New Patient {% endblock %}
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
 
-{% block content %}
 
-<!-- Content -->
-<div class="container">
-  <div class="row">
-    <form class="col s12 m8 l6 offset-m2 offset-l3" action="submit/" method="post">
-    {% csrf_token %} {% load widget_tweaks %}
-      <div class="row">
-        <div class="input-field">
-          {% render_field form.patient_name id="first_name" type="text" class="validate" autofocus="autofocus" required="required" %}
-          <label for="first_name">Patient Name</label>
-        </div>
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Patient</b></h1>
+  <h3>Add New Patient</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'patient_page' '0' %}">&lt; Back</a> </div>
       </div>
-      <div class="row">
-        <div class="input-field">
-          {% render_field form.identify_number id="hkid" type="text" class="validate" required="required" %}
-          <label for="hkid">Identification Number</label>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field">
-          {% render_field form.date_of_birth id="dob" type="text" class="validate datepicker" required="required" %}
-          <label for="dob">Date of Birth</label>
-        </div>
-      </div>
-      <div class="row">
-        <button class="waves-effect waves-light btn-small" type="submit">
-        <i class="material-icons right">add</i>Create
-        </button>
-        <a
-        class="waves-effect waves-light btn-small orange darken-4"
-        style="float: right"
-        href="{% url 'patient_page' 0 %}"
-      >
-        <i class="material-icons right">cancel</i>Cancel
-      </a>
-      </div>
-    </form>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
   </div>
 </div>
 
-<!-- JQuery -->
-<script>
-  $(document).ready(function(){
-    $('.datepicker').datepicker({"format":'yyyy-mm-dd'});
-  });
-</script>
-<!-- End of Content -->
-{% endblock %}
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l3 m2 s1"></div>
+    <form class="w3-col w3-container l6 m8 s10 w3-border w3-padding-32" action="submit/" method="post">
+      {% csrf_token %}
+      {% load widget_tweaks %}
+      <div class="w3-margin">
+        <label>Patient Name:</label>
+        {% render_field form.patient_name type="text" class+="w3-input w3-border" placeholder="Patient Name" %}
+      </div>
+      <div class="w3-margin">
+        <label>Identify Document Number:</label>
+        {% render_field form.identify_number type="text" class+="w3-input w3-border" placeholder="Identify Document Number" %}
+      </div>
+      <div class="w3-margin">
+        <label>Date of Birth:</label>
+        {% render_field form.date_of_birth type="date" class+="w3-input w3-border" placeholder="Date of Birth" %}
+      </div>
+
+      <div class="w3-margin w3-padding">
+        <input type="submit" class="w3-button w3-border w3-right w3-center">
+      </div>
+    </form>
+    <div class="w3-col w3-container l3 m2 s1"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-32"></div>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>

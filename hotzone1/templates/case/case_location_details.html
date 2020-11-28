@@ -1,63 +1,11 @@
-{% extends 'base.html' %} 
-
-{% block title %} | {{ location.case.patient.patient_name }}: {{ location.place.location }} {% endblock %} 
-
-{% block content %}
-
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <style>
-  h6{
-    line-height: 200%;
-  }
+h1,h3 {font-family: "Raleway", sans-serif}
 </style>
-
-  <div class="row">
-    <div class="col s12 m8 l6 offset-m2 offset-l3">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">{{ location.case.patient.patient_name }}</span>
-          <h6>Disease: {{ location.case.disease.disease_name }}</h6>
-          <h6>Date: {{location.date_from}} - {{location.date_to}}</h6>
-          <h6>Location: {{location.place.location}} <span class="{% if location.category == "Residence" %}purple{% elif location.category == "Workplace" %}red{% else %}green{%endif%}-text">{{location.category}}</span></h6>
-          <h6>Address: {{ location.place.address }}</h6>
-          <h6>Coordinates: ({{ location.place.x_coor }}, {{ location.place.y_coor }})</h6>
-          <a class="waves-effect waves-light btn-small" href="{% url 'case_details' location.case.pk %}">
-            <i class="material-icons right">cancel</i>Back
-          </a>
-          <a href="{% url 'case_location_edit' location.pk %}" class="waves-effect waves-light btn-small orange darken-4" style="float: right">
-            <i class="material-icons right">create</i>Edit Date
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-<!-- End of Content -->
-{% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-<div class="w3-container w3-padding">
-  <div class="w3-row">
-    <div class="w3-col w3-container w3-right l3 m2 s1"></div>
-    <div class="w3-col w3-container w3-left l3 m2 s1"></div>
-    <div class="w3-rest w3-container w3-border w3-padding">
-      <p>Location: {{ location.location }}</p>
-      <p>Address: {{ location.address }}</p>
-      <p>Coordinates (x, y): {{ location.x_coor }}, {{ location.y_coor }}</p>
-    </div>
-  </div>
-</div>
 
 
 <!-- Header -->

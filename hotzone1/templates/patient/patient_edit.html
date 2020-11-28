@@ -1,74 +1,68 @@
-{% extends 'base.html' %} 
-
-{% block title %} | Edit: {{ patient.patient_name }} {% endblock %} 
-
-{% block content %}
-
-
-<!--
-  {% url 'patient_edit' patient.pk %}
-  Edit User
-
-  {% url 'patient_details' patient.pk %}
-  Detail page
-
-  {% url 'patient_page' 0 %}
-  Back Menu
--->
-
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <style>
-  h6{
-    line-height: 200%;
-  }
+h1,h3 {font-family: "Raleway", sans-serif}
 </style>
 
-  <div class="row">
-    <div class="col s12 m8 l6 offset-m2 offset-l3">
-      <div class="card">
-        <div class="card-image">
-          <button onclick="popToast()" class="btn-floating halfway-fab waves-effect waves-light btn-medium orange darken-4">
-            <i class="material-icons">delete</i>Delete
-          </button>
-        </div>
-        <div class="card-content">
-          <!-- Form -->
-              
-            <form action="submit/{{ patient.pk }}" method="post">
-              {% csrf_token %} {% load widget_tweaks %}
-              <div class="input-field">
-                <label>Patient Name:</label>
-                {% render_field form.patient_name type="text" class+="w3-input w3-border" %}
-              </div>
-              <div class="input-field">
-                <label>Identify Document Number:</label>
-                {% render_field form.identify_number type="text" class+="w3-input w3-border" %}
-              </div>
-              <div class="input-field">
-                <label>Date of Birth:</label>
-                {% render_field form.date_of_birth id="dob" type="text" class="validate datepicker" required="required" %}
-              </div>
-              <a class="waves-effect waves-light btn-small" href="{% url 'patient_details' patient.pk %}">
-                <i class="material-icons right">cancel</i>Cancel
-              </a>
-              <button class="waves-effect waves-light btn-small" style="float: right" type="submit">
-                <i class="material-icons right">check</i>Done
-              </button>
-            </form>
-            <!-- End Form -->
-        </div>
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Patient</b></h1>
+  <h3>{{ patient.patient_name }}</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'patient_details' patient.pk %}">&lt; Back</a> </div>
+        <div class="w3-button w3-border w3-right w3-center w3-text-red" style="width:100px"onclick="deletePatient()">DELETE</div>
       </div>
     </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
   </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l3 m2 s1"></div>
+    <form class="w3-col w3-container l6 m8 s10 w3-border w3-padding-32" action="submit/{{ patient.pk }}" method="post">
+      {% csrf_token %}
+      {% load widget_tweaks %}
+      <div class="w3-margin">
+        <label>Patient Name:</label>
+        {% render_field form.patient_name type="text" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        <label>Identify Document Number:</label>
+        {% render_field form.identify_number type="text" class+="w3-input w3-border" %}
+      </div>
+      <div class="w3-margin">
+        <label>Date of Birth:</label>
+        {% render_field form.date_of_birth type="date" class+="w3-input w3-border" %}
+      </div>
+
+      <div class="w3-margin w3-padding">
+        <input type="submit" class="w3-button w3-border w3-right w3-center">
+      </div>
+    </form>
+    <div class="w3-col w3-container l3 m2 s1"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding-32"></div>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
 
 
 <script>
-function popToast(){
-  var toastHTML = '<span>Delete Patient "{{ patient.patient_name }}"?</span><a href="{% url 'patient_delete' patient.pk %}" class="btn-flat toast-action">Confirm</a>';
-  M.toast({html: toastHTML, displayLength:7000 });
-}
-
-
 function deletePatient() {
       if (confirm("Delete Patient: {{ patient.patient_name }} ?")){
         alert("Deleted!");
@@ -76,9 +70,4 @@ function deletePatient() {
       };
     }
 
-$(document).ready(function(){
-    $('.datepicker').datepicker({"format":'yyyy-mm-dd'});
-  });
 </script>
-
-{% endblock %}

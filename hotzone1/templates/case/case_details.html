@@ -1,73 +1,81 @@
-{% extends 'base.html' %} 
-
-{% block title %} | Case Info: #{{ case.case_number }} {% endblock %} 
-
-{% block content %}
-
-  {% comment %} 
-  {{ disease.disease_name }}
-  {{ disease.virus }}
-  {{ disease.max_infectious_period }} 
-
-  "{% url 'case_delete' case.pk %}"
-  {% endcomment %}
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
 <style>
-  h6{
-    line-height: 200%;
-  }
+h1,h3 {font-family: "Raleway", sans-serif}
 </style>
 
-  <div class="row">
-    <div class="col s12 m8 l6 offset-m2 offset-l3">
-      <div class="card">
-        <div class="card-content">
-          <span class="card-title">Case #{{ case.case_number }}</span>
-          <h6>Date Confirm: {{ case.date_confirmed }}</h6>
-          <h6>Disease: {{ case.disease.disease_name }}</h6>
-          <h6>Patient Name: {{ case.patient.patient_name }}</h6>
-          <h6>Local/Import: {% if case.is_local %}<span class="blue-text">Local</span>{% else %}<span class="green-text">Import{% endif %}</span></h6>
-          
-          <!-- Location -->
-          <div class="row">
-            <a class="waves-effect waves-light btn-small" style="float:right;" href="{% url 'case_location_add_search' case.pk %}?location_query=">
-              <i class="material-icons right">add</i>Add Location</a>
-          </div>
-          <ul class="collection with-header">
-          {% if location_list.count == 0%}
-            <li class="collection-header center"><h6>No Location Record</h6></li>
-          {% else %}
-            <li class="collection-header center"><h6>Locations Visited</h6></li>
-          {% endif %}
-          {% for location in location_list %}
-            <li class="collection-item">
-                <span style="font-weight: 600; font-size: 20px;" class="cyan-text text-darken-4">#{{ forloop.counter }}</span>
-                <span class="title">{{location.place.location}}</span>
-                <p>{{location.date_from}} - {{location.date_to}}</p>
-                <span style="float:right; margin-left: 0; top: 40%;" class="new badge secondary-content {% if location.category == "Residence" %}purple{% elif location.category == "Workplace" %}red{% else %}green{%endif%}" data-badge-caption="">{{location.category}}</span>
-                <a href="{% url 'case_location_details' location.pk %}">View Details</a>
-            </li>
-          {% endfor %} 
-          </ul>
 
-          <!-- End Location -->
-          <a class="waves-effect waves-light btn-small" href="{% url 'case_disease' case.disease.pk '0' %}">
-            <i class="material-icons right">cancel</i>Back
-          </a>
-          <a onclick="popToast()" class="waves-effect waves-light btn-small orange darken-4" style="float: right">
-            <i class="material-icons right">delete</i>Delete
-          </a>
-        </div>
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Case</b></h1>
+  <h3>{{ case.disease.disease_name }} - {{case.patient.patient_name}} ({{ case.case_number }})</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'case_disease' case.disease.pk offset %}">&lt; Back</a> </div>
+        <div class="w3-button w3-border w3-right w3-center w3-text-red" style="width:100px"onclick="deleteCase()">DELETE</div>
       </div>
     </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
   </div>
+</div>
+
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container w3-left l3 m2 s1"></div>
+    <div class="w3-col w3-container w3-right l3 m2 s1"></div>
+    <div class="w3-rest w3-container">
+      <h4>Basic Information</h4>
+      <div class="w3-border w3-padding">
+        <p>Case Number: {{ case.case_number }} {% if case.is_local %}(Local){% else %}(Import){% endif %}</p>
+        <p>Patient Name: {{ case.patient.patient_name }}</p>
+        <p>Disease: {{ case.disease.disease_name }}</p>
+      </div>
+      <br>
+      <h4>Locations Visited by Patient</h4>
+    </div>
+  </div>
+</div>
+
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <a class="w3-button w3-border w3-block w3-left-align w3-padding w3-text-grey" href="{% url 'case_location_add_search' case.pk %}">
+          &nbsp; -> Add a New Location
+      </a>
+      {% for location in location_list %}
+      <a class="w3-button w3-border w3-block w3-left-align w3-padding" href="{% url 'case_location_details' location.pk %}">
+          <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">&nbsp;&nbsp;&nbsp; Location: {{location.place.location}} ({{location.category}})</div>
+          <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">&nbsp;&nbsp;&nbsp; Address: {{location.place.address}}</div>
+          <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">&nbsp;&nbsp;&nbsp; Date: {{location.date_from}} - {{location.date_to}}</div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
+
 
 <script>
-function popToast(){
-  var toastHTML = '<span>Delete Case #{{ case.case_number }}"?</span><a href="{% url 'case_delete' case.pk %}" class="btn-flat toast-action">Confirm</a>';
-  M.toast({html: toastHTML, displayLength:7000 });
-}
-</script>
+function deleteCase() {
+      if (confirm("Delete the following case entry from {{case.disease.disease_name}}(Case No: {{case.case_number}})?\nPatient Name: {{ case.patient.patient_name }}\nIdentify Number: {{case.patient.identify_number}}")){
+        alert("Deleted!");
+        window.location.href = "{% url 'case_delete' case.pk %}";
+      };
+    }
 
-<!-- End of Content -->
-{% endblock %}
+</script>

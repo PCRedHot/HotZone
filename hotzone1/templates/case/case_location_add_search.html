@@ -1,225 +1,153 @@
-{% extends 'base.html' %} 
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-{% block title %} | Add Location Visited {% endblock %} 
-
-{% block content %}
-
-
-{% comment %} 
-  {% url 'case_details' case.pk %}
-  {{ case.disease.disease_name }}
-  {{case.patient.patient_name}} 
-  {{ case.case_number }}
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
 
 
-  Database
-  {% url 'case_location_add' case.pk %}?location_pk={{result.pk}}
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Case</b></h1>
+  <h3>{{ case.disease.disease_name }} - {{case.patient.patient_name}} ({{ case.case_number }})</h3>
+  <h3>Add Locations Visited</h3>
+</header>
 
-{% endcomment %}
-
-<!-- Content -->
-<div class="container">
-  <nav class="clean">
-    <div class="nav-wrapper">
-      <div class="col s12">
-        <a href="{% url 'case_details' case.pk %}" class="breadcrumb">{{case.patient.patient_name}} </a>
-        <a href="" class="breadcrumb">Add Location Visited</a>
-      </div>
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <form class="w3-row" method="get"  action="">
+        <div class="w3-col w3-right w3-container w3-center" style="width:100px">
+          <input class="w3-button w3-white w3-border" type="submit" value="Search">
+        </div>
+        <div class="w3-col w3-left w3-container w3-center" style="width:120px"> <a class="w3-button w3-white w3-border" href="{% url 'case_details' case.pk %}"> &lt; Back</a> </div>
+        <div class="w3-rest w3-center">
+          <input class="w3-input" type="text" name="location_query" placeholder="Search a location in Hong Kong"></input>
+        </div>
+      </form>
     </div>
-  </nav>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
 </div>
 
-<form class="row" method="get" action="">
-  <div class="container">
-    <div class="row">
-      <div class="input-field">
-        <input
-          type="text"
-          name="location_query"
-          autofocus
-        />
-        <label class="active" for="first_name2">Search Location</label>
-      </div>
-    </div>
-    <div class="row">
-      <button class="waves-effect waves-light btn-small" type="submit">
-        <i class="material-icons right">arrow_forward</i>Search
-      </button>
-    </div>
-  </div>
-</form>
+<div class="w3-container w3-padding-16"></div>
 
-
-{% if database_list|length == 0 %}
-<script>
-  $(document).ready(function(){
-    M.toast({html: 'No Location Found In Database'})
-  });
-</script>
-
-{% endif %}
-<script>
-var results_count = {{ database_list|length }};
-</script>
-
-
-
-<div class="container">
-  <div style="font-size: 80%; color: grey">
-    &nbsp;Showing <span id="resultCount">test</span>
-  </div>
-  <div class="collection">
-    <!-- Start Collection -->
-
-      <!-- Database -->
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    {% if database_list|length > 0 %}
+    <h4>&nbsp;&nbsp;&nbsp;Database Locations</h4>
+    {% endif %}
+    <div class="w3-container">
       {% for result in database_list %}
-      <a href="{% url 'case_location_add' case.pk %}?location_pk={{result.pk}}" class="collection-item"
-      >{{result.location}}<span class="new badge green" data-badge-caption="">Database</span></a>
+      <a class="w3-button w3-border w3-block w3-left-align w3-padding" href="{% url 'case_location_add' case.pk %}?location_pk={{result.pk}}" style="text-overflow:ellipsis">
+          <div>&nbsp;> Location: {{result.location}}</div>
+          <div>&nbsp;&nbsp;&nbsp; Address: {{result.address}}</div>
+      </a>
       {% endfor %}
-
-      <!-- GeoData Store -->
-      {% for result in result_list %}
-      <a onclick="addLocation({{ forloop.counter0 }})" class="collection-item">
-      {{result.nameEN}}<span class="new badge blue" data-badge-caption="">GeoData Store</span></a>
-      {% endfor %}
+    </div>
   </div>
 </div>
 
-<!-- Modal Structure -->
-  <div id="modal1" class="modal">
-    <div class="modal-content">
-      <h4>Confrim</h4>
-      <h6>Are you sure you want to add this location?</h6>
-      <p id="confrim_title" class="blue-text">A bunch of text</p>
-      <p class="grey-text">Address: <span id="confirm_addr">A bunch of text</span></p>
-      <p id="confirm_cord">A bunch of text</p>
+<hr>
+{% if res_code != 200 and res_code != 400 %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <h4>&nbsp;&nbsp;&nbsp;GeoData Locations</h4>
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing 0 result </div>
     </div>
-    <div class="modal-footer">
-      <a style="position: relative; display: block;" onclick="confirm()" class="modal-close waves-effect waves-blue btn-small">Yes</a>
+    <div class="w3-container">
+      <div class="w3-border w3-block w3-left-align w3-padding">
+        <div class="w3-padding"></div>
+        <b>&nbsp; Error: Cannot get location data from GeoData!</b>
+        <div class="w3-padding"></div>
+      </div>
     </div>
   </div>
-
-<script>
-  $(document).ready(function(){
-    $('.modal').modal();
-  });
-</script>
-
-<!-- Script -->
-
-{% if res_code != 200 and res_code != 400 and res_code != 500%}
-<script>
-  $(document).ready(function(){
-    M.toast({html: 'Cannot get data from GeoData Store'})
-  });
-</script>
+</div>
 {% elif result_list|length > 0 %}
-      <script>
-        results_count += {{ result_list|length }}
-      </script>
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <h4>&nbsp;&nbsp;&nbsp;GeoData Locations</h4>
+    <div class="w3-container">
+      {% if result_list|length == 1 %}
+      <div style="font-size:80%;color:grey">&nbsp;Showing 1 result </div>
+      {% else %}
+      <div style="font-size:80%;color:grey">&nbsp;Showing {{ result_list|length }} results </div>
+      {% endif %}
+    </div>
+    <div class="w3-container">
+      {% for result in result_list %}
+      <div class="w3-button w3-border w3-block w3-left-align w3-padding" onclick="addLocation({{ forloop.counter0 }})") style="text-overflow:ellipsis">
+          <div>&nbsp;> Location: {{result.nameEN}}</div>
+          <div>&nbsp;&nbsp;&nbsp; Address: {{result.addressEN}}</div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
 {% elif result_list %}
-<script>
-  $(document).ready(function(){
-    M.toast({html: 'No location found from GeoData Store'})
-  });
-</script>
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <h4>&nbsp;&nbsp;&nbsp;GeoData Locations</h4>
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing 0 result </div>
+    </div>
+    <div class="w3-container">
+      <div class="w3-border w3-block w3-left-align w3-padding">
+        <div class="w3-padding"></div>
+        <b>&nbsp; No location data in GeoData Matches!</b>
+        <div class="w3-padding"></div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endif %}
 
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
 
 {{ result_list|json_script:"result_list" }}
 
 <script type="text/javascript">
-  var windowsIndex;
-
   function addLocation(index){
-    windowsIndex = index
     let item = JSON.parse(document.getElementById('result_list').textContent)[index];
     item.x = Math.round(item.x);
     item.y = Math.round(item.y);
-
-    if (item.addressEN == ""){
-      item.addressEN = "N/A";
+    if (confirm(`Add the new location to database and proceed?\nLocation: ${item.nameEN}\nAddress: ${item.addressEN}\nx-coordinate: ${item.x}\ny-coordinate: ${item.y}`)){
+      const Http = new XMLHttpRequest();
+      const params = `?location=${item.nameEN}&address=${item.addressEN}&x=${item.x}&y=${item.y}`;
+      window.location.href = window.location.href.substring(0,window.location.href.indexOf('query/')+6) + 'submit/' + {{ case.pk }} + params;
     }
-
-    document.getElementById('confrim_title').innerText = item.nameEN;
-    document.getElementById('confirm_addr').innerText = item.addressEN;
-    document.getElementById('confirm_cord').innerText = `(${item.x}, ${item.y})`;
-
-    $('.modal').modal('open');
-  }
-
-  function confirm(){
-    let index = windowsIndex;
-    console.log("index:"+index);
-    let item = JSON.parse(document.getElementById('result_list').textContent)[index];
-    item.x = Math.round(item.x);
-    item.y = Math.round(item.y);
-    
-    const Http = new XMLHttpRequest();
-    const params = `?location=${item.nameEN}&address=${item.addressEN}&x=${item.x}&y=${item.y}`;
-    window.location.href = window.location.href.substring(0,window.location.href.indexOf('query/')+6) + 'submit/' + {{ case.pk }} + params;
   }
 </script>
 
-{% if res_code != 200 and res_code != 400 and res_code != 500 %}
-<script>
-  $(document).ready(function(){
-    M.toast({html: 'Cannot get Location Data from GeoData!\n(Response code: {{ res_code }})'})
-  });
+{% if res_code != 200 and res_code != 400 %}
+<script type="text/javascript">
+        function failed() {
+            alert('Cannot get Location Data from GeoData!\n(Response code: {{ res_code }})');
+        }
+        window.onload = failed();
 </script>
 {% endif %}
 
 {% if res_code == 400 %}
-<script>
-  $(document).ready(function(){
-    M.toast({html: 'No location data from GeoData matches!'})
-  });
+<script type="text/javascript">
+        function failed() {
+            alert('No location data from GeoData matches!');
+        }
+        window.onload = failed();
 </script>
 {% endif %}
-
-<script>
-$( document ).ready(function() {
-  let output_string = ' results'
-
-  if (results_count == 1){
-    output_string = ' result'
-  }
-  document.getElementById('resultCount').innerText = results_count + output_string;
-  console.log(results_count);
-});
-</script>
-
-<!-- End of Content -->
-{% endblock %}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -1,84 +1,121 @@
-{% extends 'base.html' %} 
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 
-{% block title %} | Cases of {{ disease.disease_name }} {% endblock %} 
+<style>
+h1,h3 {font-family: "Raleway", sans-serif}
+</style>
 
-{% block content %}
 
-<!-- Content -->
-<div class="container">
-  <nav class="clean">
-    <div class="nav-wrapper">
-      <div class="col s12">
-        <a href="{% url 'case_choose_disease' '0' %}" class="breadcrumb">Select Disease</a>
-        <a href="" class="breadcrumb">{{ disease.disease_name }}</a>
-      </div>
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Case</b></h1>
+  <h3>{{ disease.disease_name }}</h3>
+</header>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <form class="w3-row" method="get"  action="query/0">
+        <div class="w3-col w3-right w3-container w3-center" style="width:100px">
+          <input class="w3-button w3-white w3-border" type="submit" value="Search">
+        </div>
+        <div class="w3-col w3-left w3-container w3-center" style="width:120px"> <a class="w3-button w3-white w3-border" href="{% url 'case_choose_disease' '0' %}"> &lt; Back</a> </div>
+        <div class="w3-rest w3-center">
+          <input class="w3-input" type="text" name="case_search" placeholder="Search Cases of {{ disease.disease_name }}"></input>
+        </div>
+      </form>
     </div>
-  </nav>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
 </div>
 
-<form class="row" method="get" action="query/0">
-  <div class="container">
-    <div class="row">
-      <div class="input-field">
-        <input
-          type="text"
-          name="disease_search"
-          autofocus
-        />
-        <label class="active" for="first_name2">Search Case</label>
+<div class="w3-container w3-padding-16"></div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row" method="get"  action="query/0">
+        {% if previous != offset %}
+        <div class="w3-col w3-left w3-container w3-center" style="width:150px">
+          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'case_disease' disease.pk previous %}">&lt; Previous</a>
+        </div>
+        {% endif %}
+        {% if next != offset %}
+        <div class="w3-col w3-right w3-container w3-center" style="width:150px">
+          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'case_disease' disease.pk next %}">Next &gt;</a>
+        </div>
+        {% endif %}
       </div>
     </div>
-    <div class="row">
-      <button class="waves-effect waves-light btn-small" type="submit" value="Search">
-        <i class="material-icons right">arrow_forward</i>Search
-      </button>
-      <a
-        class="waves-effect waves-light btn-small orange darken-4"
-        style="float: right"
-        href="{% url 'case_disease_add' disease.pk %}"
-      >
-        <i class="material-icons right">add</i>Create New Case
-      </a>
-    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
   </div>
-</form>
+</div>
 
 
 {% if case_list.count == 0 %}
-<script>
-  $(document).ready(function(){
-    M.toast({html: 'No case of "{{ disease.disease_name }}"" found'})
-  });
-</script>
-
-{% else %}
-
-<div class="container">
-  <div style="font-size: 80%; color: grey">
-    &nbsp;Showing {{ case_list.count }} results from {{ start_index }} to {{ end_index }}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing 0 result </div>
+    </div>
+    <div class="w3-container">
+      <a class="w3-button w3-border w3-block w3-left-align w3-padding w3-text-grey" href="{% url 'case_disease_add' disease.pk %}">
+          &nbsp; -> add a new case
+      </a>
+      <div class="w3-border w3-block w3-left-align w3-padding">
+        > No Case of {{ disease.disease_name }} In Database
+      </div>
+    </div>
   </div>
-  <div class="collection">
-    <!-- Start Collection -->
-
-    {% for case in case_list %}
-
-    {% comment %} 
-     {{case.case_number}} 
-     {{case.patient.patient_name}} 
-     {{case.date_confirmed|date:"Y-m-d"}} 
-     ({% if case.is_local%}local{% else %}import{%endif%})
-     {% url 'case_choose_disease' '0' %}
-    {% endcomment %}
-
-    <a href="{% url 'case_details' case.pk  %}" class="collection-item"
-      ><span class="grey-text text-darken-3">#{{case.case_number}} </span>{{case.patient.patient_name}}  {% if case.is_local%}<span class="new badge blue" data-badge-caption=""
-        >local</span>{% else %}<span class="new badge green" data-badge-caption=""
-        >import{%endif%}</span
-      ><span class="badge" data-badge-caption="">Confrim Date: {{case.date_confirmed|date:"Y-m-d"}}</span></a
-    >
-    {% endfor %}
+</div>
+{% else %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing {{ case_list.count }} results from {{ start_index }} to {{ end_index }}</div>
+    </div>
+    <div class="w3-container">
+      <a class="w3-button w3-border w3-block w3-left-align w3-padding w3-text-grey" href="{% url 'case_disease_add' disease.pk %}">
+          &nbsp; -> add a new case
+      </a>
+      {% for case in case_list %}
+      <a class="w3-button w3-border w3-block w3-left-align w3-padding" href="{% url 'case_details' case.pk  %}">
+          &nbsp;> {{case.case_number}}: {{case.patient.patient_name}} {{case.date_confirmed|date:"Y-m-d"}} ({% if case.is_local%}local{% else %}import{%endif%})
+      </a>
+      {% endfor %}
+    </div>
   </div>
 </div>
 {% endif %}
-<!-- End of Content -->
-{% endblock %}
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row" method="get"  action="query/0">
+        {% if previous != offset %}
+        <div class="w3-col w3-left w3-container w3-center" style="width:150px">
+          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'case_disease' disease.pk previous %}">&lt; Previous</a>
+        </div>
+        {% endif %}
+        {% if next != offset %}
+        <div class="w3-col w3-right w3-container w3-center" style="width:150px">
+          <a class="w3-button w3-white w3-border" style="width:110px" href="{% url 'case_disease' disease.pk next %}">Next &gt;</a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>

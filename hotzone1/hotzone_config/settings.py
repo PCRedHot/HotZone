@@ -12,9 +12,9 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 import os
 from pathlib import Path
-#from environs import Env
-#env = Env()
-# env.read_env()
+from environs import Env
+env = Env()
+env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,19 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'wvn-cnt2@*!egb8j4(ilw6=przz(c%opyz2t*wt$u(8a_zrwai'
-#SECRET_KEY = env('HOTZONE_SECRET_KEY')
+SECRET_KEY = env('HOTZONE_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-#DEBUG = env.bool('HOTZONE_DEBUG', default=False)
+#DEBUG = True
+DEBUG = env.bool('HOTZONE_DEBUG', default=False)
 
 ALLOWED_HOSTS = [
     'secret-lake-40234.herokuapp.com',
     'localhost',
     '127.0.0.1',
-    '192.168.1.42',
-]
+    ]
 
 
 # Application definition
@@ -76,6 +74,7 @@ TEMPLATES = [
             os.path.join(BASE_DIR, 'templates/disease'),
             os.path.join(BASE_DIR, 'templates/location'),
             os.path.join(BASE_DIR, 'templates/case'),
+            os.path.join(BASE_DIR, 'templates/cluster'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -95,15 +94,7 @@ WSGI_APPLICATION = 'hotzone_config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
-# Local test mode
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'mydatabase',
-    }
-}
-
-# DATABASES = {
+#DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.postgresql',
 #         'NAME': 'hotzonedb',
@@ -112,12 +103,11 @@ DATABASES = {
 #         'HOST': 'localhost',
 #         'PORT': '',
 #     }
-# }
+#}
+DATABASES = {
+ 'default': env.dj_db_url('DATABASE_URL')
+}
 
-# Deploy mode
-# DATABASES = {
-#  'default': env.dj_db_url('DATABASE_URL')
-# }
 
 
 # Password validation

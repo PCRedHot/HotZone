@@ -131,6 +131,7 @@ def locationAllView(request, offset):
 @login_required
 def locationDetailsView(request, pk):
     context = {}
+    context = super().get_context_data(**kwargs)
     context['location'] = Place.objects.get(pk=pk)
     context['offset'] = (pk-1) // 100
     return render(request, 'location_details.html', context)

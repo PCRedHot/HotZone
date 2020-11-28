@@ -24,11 +24,5 @@ urlpatterns = [
     path('data/case/', include('case_page.urls')),
     path('data/disease/', include('disease_page.urls')),
     path('data/location/', include('location_page.urls')),
+    path('cluster/', include('cluster_page.urls')),
 ]
-
-# default: "Django Administration"
-admin.site.site_header = 'HotZone Control Panel'
-# default: "Site administration"
-admin.site.index_title = 'Features area'
-# default: "Django site admin
-admin.site.site_title = 'Welcome to HotZone Admin Panel!'

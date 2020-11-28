@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h5 {font-family: "Raleway", sans-serif}
+</style>
+
+<div class="w3-content" style="max-width:1400px">
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Cluster</b></h1>
+  <h3>{{ disease.disease_name }}</h3>
+</header>
+
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'disease_details' disease.pk %}">&lt; Back</a> </div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:150px">
+          <a class="w3-button w3-white w3-border" style="width:110px" onclick="show(0)">&lt; Previous</a>
+        </div>
+        <div class="w3-col w3-right w3-container w3-center" style="width:150px">
+          <a class="w3-button w3-white w3-border" style="width:110px" onclick="show(1)">Next &gt;</a>
+        </div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+
+{% if clusters.count == 0 %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing 0 cluster </div>
+    </div>
+  </div>
+</div>
+{% else %}
+<div class="w3-row">
+  <div class="w3-col w3-left w3-container l2 m1 s0"></div>
+  <div class="w3-col w3-right w3-container l2 m1 s0"></div>
+  <div class="w3-rest w3-container">
+    <div class="w3-container">
+      <div style="font-size:80%;color:grey">&nbsp;Showing {{ clusters|length }} clusters </div>
+    </div>
+    {% for cluster in clusters %}
+    {% if forloop.first %}
+    <div id="cluster1" class="page" style="">
+        Cluster 1
+    {% else %}
+    <div id="cluster{{ forloop.counter }}" class="page" style="display:none">
+        Cluster {{ forloop.counter }}
+    {% endif %}
+    <div class="w3-container">
+      {% for pt in cluster %}
+      <div class="w3-border w3-block w3-left-align w3-padding">
+          &nbsp; Case Number: {{ pt.caseNo }} <br>
+          &nbsp; X: {{ pt.x_coor }} Y: {{ pt.y_coor }} <br>
+          &nbsp; Date of Visit: {{ pt.date }}
+      </div>
+      {% endfor %}
+    </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endif %}
+
+</div>
+
+<script>
+  var num = 1;
+  function show(next) {
+    if (next == 1) {
+      num = Math.min(num+1, {{ clusters|length }});
+    }else{
+      num = Math.max(num-1, 1);
+    }
+    var element = document.getElementById('cluster'+num);
+    var pages = document.getElementsByClassName('page');
+    for(var i = 0; i < pages.length; i++) {
+        pages[i].style.display = 'none';
+    }
+    element.style.display = 'block';
+  }
+</script>
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>

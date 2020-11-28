@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+<style>
+h1,h5 {font-family: "Raleway", sans-serif}
+</style>
+
+<div class="w3-content" style="max-width:1400px">
+
+<!-- Header -->
+<header class="w3-container w3-center w3-padding-32">
+  <h1><b>HotZone - Cluster</b></h1>
+  <h3>{{ disease.disease_name }}</h3>
+</header>
+
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container l2 m1 s0"></div>
+    <div class="w3-col w3-container l8 m10 s12">
+      <div class="w3-row">
+        <div class="w3-col w3-left w3-container w3-center" style="width:100px"> <a class="w3-button w3-white w3-border" href="{% url 'disease_details' disease.pk %}">&lt; Back</a> </div>
+      </div>
+    </div>
+    <div class="w3-col w3-container l2 m1 s0"></div>
+  </div>
+</div>
+
+<div class="w3-container w3-padding">
+  <div class="w3-row">
+    <div class="w3-col w3-container w3-right l4 m3 s2"></div>
+    <div class="w3-col w3-container w3-left l4 m3 s2"></div>
+    <form class="w3-rest w3-container w3-border w3-padding" method="put" action="view/{{ disease.pk }}">
+      {% csrf_token %}
+      <div class="w3-margin w3-center">
+        <h3>Cluster Option</h3>
+      </div>
+      <div class="w3-margin">
+        <label>Inter-location Distance Threshold:</label>
+        <input type="number" name="distance" min="1" value="200" class="w3-input w3-border" placeholder="Inter-location Distance Threshold" required id="id_distance">
+      </div>
+      <div class="w3-margin">
+        <label>Proximity in Time Threshold:</label>
+        <input type="number" name="time" min="1" value="3" class="w3-input w3-border" placeholder="Proximity in Time Threshold" required id="id_time">
+      </div>
+      <div class="w3-margin">
+        <label>Minimum Cluster Size:</label>
+        <input type="number" name="size" min="2" value="2" class="w3-input w3-border" placeholder="Minimum Cluster Size" required id="id_size">
+      </div>
+      <div class="w3-margin w3-padding w3-center">
+        <input type="submit" class="w3-button w3-border w3-center" value="Start" style="width:100px">
+      </div>
+    </form>
+  </div>
+</div>
+
+</div>
+
+
+<!-- footer -->
+<footer class="w3-center w3-padding-16" style="font-size:80%">HotZone@2020 by HKU COMP3297 Group C</footer>
